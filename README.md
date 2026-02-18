@@ -1,24 +1,24 @@
 # Raspberry Pi Home Server Setup
 
-This repository documents how I built and evolved my personal home server — from a manual OpenMediaVault + Docker setup to a clean Umbrel-based system.
+This repository documents how I built and evolved my personal home server - from a manual OpenMediaVault + Docker setup to a clean Umbrel-based system.
 
 The project helped me deeply understand networking, containerization, storage management, permissions, and self-hosted infrastructure.
 
 ## Hardware
-- Geekworm NASPi Gemini 2.5 Dual SATA NAS Kit
+- Geekworm NASPi Gemini 2.5 Dual SATA NAS Kit ([link](https://geekworm.com/products/naspi-gemini))
 - 2x Samsung 4TB SSDs
-- RAID 1 configured directly via NASPi
 - Fully cable-connected network (no WiFi)
-- No SD card — entire system runs from SSDs (better performance & reliability)
+- No SD card: entire system runs from SSDs (better performance & reliability)
 
 The NASPi case supports hardware RAID and includes configurable pins for:
 - Auto fan
 - Auto start
 - RAID 1 mode
 
-TODO: Add hardware image
 
-## First Setup – OpenMediaVault + Docker + Portainer
+![Naspi](./img/naspi.png)
+
+## First Setup – Raspberry Pi OS + Manual Setup For Services
 
 This setup was highly manual and required deeper system understanding.
 
@@ -39,6 +39,7 @@ Portainer made orchestration easier, but required manual networking and volume c
 - Central landing page for all services
 
 #### Nextcloud
+```bash
 docker run \
 --init \
 --sig-proxy=false \
@@ -50,6 +51,7 @@ docker run \
 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config \
 --volume /var/run/docker.sock:/var/run/docker.sock:ro \
 nextcloud/all-in-one:latest
+```
 
 #### Jellyfin
 
@@ -69,13 +71,13 @@ Without proper ACL configuration:
 - Either folders were accessible to everyone
 - or inaccessible to everyone
 
-Permissions via user panel did not work reliably — ACL solved it.
+Permissions via user panel did not work reliably - ACL solved it.
 
 #### NFS Mounting
 
 Mount entry in `/etc/fstab`:
 ```bash
-192.168.178.82:/Media /home/x/Media nfs defaults 0 0
+192.168.178.82:/Media /home/homeserver/Media nfs defaults 0 0
 ```
 
 
@@ -129,7 +131,8 @@ After running the manual setup for some time, I migrated everything to Umbrel.
 
 The networking architecture (static IP, DNS via Pi-hole, Fritzbox configuration) remained mostly unchanged.
 
-TODO: Add Umbrel dashboard screenshot
+![umbrel](./img/umbrel.png)
+source: © umbrel
 
 ### What I Learned
 
